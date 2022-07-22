@@ -23,10 +23,10 @@ namespace Domain
             this.TotalPrice = totalPrice;
         }
 
-        private TradeRecord CreateTradeRecord(TransactionId id, ClientName clientName, 
+        public static TradeRecord CreateTradeRecord(TransactionId id, ClientName clientName, 
                 ItemName itemName, ItemQuantity qty, Money unitPrice, Money totalPrice)
         {
-            if(totalPrice >= unitPrice)
+            if(totalPrice == unitPrice * qty)
                 return new TradeRecord(id, clientName, itemName, qty, unitPrice, totalPrice);
             else
                 throw new Exception("Invalid TradeRecord");

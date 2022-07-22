@@ -11,7 +11,7 @@ namespace ValueObjects
             this.Name = name;
         }
 
-        public ClientName CreateId(string name)
+        public static ClientName CreateName(string name)
         {
             if(ValidateId(name))
                 return new ClientName(name);
@@ -19,7 +19,7 @@ namespace ValueObjects
                 throw new System.Exception("Invalid name");
         }
 
-        private bool ValidateId(string name)
+        private static bool ValidateId(string name)
         {
             Regex regex = new Regex("[A-Za-z]+");
             if(name.Length <= 20)

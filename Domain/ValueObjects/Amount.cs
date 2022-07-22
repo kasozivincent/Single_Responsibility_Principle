@@ -9,7 +9,7 @@ namespace ValueObjects
             this.Value = value;
         }
 
-        public Amount CreateAmount(decimal name)
+        public static Amount CreateAmount(decimal name)
         {
             if(ValidateId(name))
                 return new Amount(name);
@@ -17,7 +17,7 @@ namespace ValueObjects
                 throw new System.Exception("Invalid Amount");
         }
 
-         private bool ValidateId(decimal value)
+         private static bool ValidateId(decimal value)
         {
             if((value >= 1) && (value <= 2000000))
                 return true;
@@ -25,6 +25,8 @@ namespace ValueObjects
                 return false;
         }
 
+        public static Amount operator *(Amount amount, int a)
+            => new Amount(amount.Value * a);
         public static bool operator >= (Amount a, Amount b)
             => a.Value >= b.Value;
 

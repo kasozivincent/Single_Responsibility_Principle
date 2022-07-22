@@ -11,7 +11,7 @@ namespace ValueObjects
             this.Id = Id;
         }
 
-        public TransactionId CreateId(string Id)
+        public static TransactionId CreateId(string Id)
         {
             if(ValidateId(Id))
                 return new TransactionId(Id);
@@ -19,9 +19,9 @@ namespace ValueObjects
                 throw new System.Exception("Invalid Id");
         }
 
-        private bool ValidateId(string Id)
+        private static bool ValidateId(string Id)
         {
-            Regex regex = new Regex("[A-Z]{3}/d{3}");
+            Regex regex = new Regex("^[A-Z]{3}/[0-9]{3}$");
             if(Id.Length == 6)
                 return regex.IsMatch(Id);
             else
