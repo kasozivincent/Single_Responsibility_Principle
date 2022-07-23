@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Xml;
 using Domain;
+using Domain.Models;
 using ValueObjects;
 
 namespace TestProgram
@@ -8,8 +11,7 @@ namespace TestProgram
     {
         public static void Main()
         {
-            var a = new TradeProcessor();            
-            a.ProcessTrades(@"C:\Users\kasozi\Desktop\SRP\Domain\data.txt");
+            new TradeProcessor().ProcessTrades(@"C:\Users\kasozi\Desktop\SRP\Domain\data.txt");
 
         }
     }

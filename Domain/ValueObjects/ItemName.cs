@@ -11,15 +11,15 @@ namespace ValueObjects
             this.Name = name;
         }
 
-        public static ItemName CreateItemName(string name)
+        public static ItemName FromString(string name)
         {
-            if(ValidateId(name))
+            if(ValidateItemName(name))
                 return new ItemName(name);
             else
                 throw new System.Exception("Invalid name");
         }
 
-        private static bool ValidateId(string name)
+        private static bool ValidateItemName(string name)
         {
             Regex regex = new Regex("[A-Za-z]+");
             if(name.Length <= 10)

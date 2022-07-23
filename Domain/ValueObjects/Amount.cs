@@ -5,25 +5,13 @@ namespace ValueObjects
         public readonly decimal Value;
 
         private Amount(decimal value)
-        {
-            this.Value = value;
-        }
+            => this.Value = value;
 
-        public static Amount CreateAmount(decimal name)
-        {
-            if(ValidateId(name))
-                return new Amount(name);
-            else
-                throw new System.Exception("Invalid Amount");
-        }
+        public static Amount FromDecimal(decimal name)
+            => ValidateAmount(name) ? new Amount(name) : throw new System.Exception("Invalid Amount");
 
-         private static bool ValidateId(decimal value)
-        {
-            if((value >= 1) && (value <= 2000000))
-                return true;
-            else
-                return false;
-        }
+        private static bool ValidateAmount(decimal value)
+            => (value >= 1) && (value <= 2000000) ? true : false;
 
         public static Amount operator *(Amount amount, int a)
             => new Amount(amount.Value * a);

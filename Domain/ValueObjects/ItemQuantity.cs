@@ -7,25 +7,13 @@ namespace ValueObjects
         public readonly int Qty;
 
         private ItemQuantity(int qty)
-        {
-            this.Qty = qty;
-        }
+           => this.Qty = qty;
 
-        public static ItemQuantity CreateItemQuantity(int qty)
-        {
-            if(ValidateId(qty))
-                return new ItemQuantity(qty);
-            else
-                throw new System.Exception("Invalid name");
-        }
+        public static ItemQuantity FromInt(int qty)
+           => ValidateId(qty) ? new ItemQuantity(qty) : throw new System.Exception("Invalid name");
 
         private static bool ValidateId(int qty)
-        {
-            if((qty >= 1) && (qty <= 20))
-                return true;
-            else
-                return false;
-        }
+            => (qty >= 1) && (qty <= 20) ? true : false;
 
         public override string ToString()
             => $"{Qty}";

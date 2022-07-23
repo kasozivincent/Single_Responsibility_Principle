@@ -25,12 +25,7 @@ namespace Domain
 
         public static TradeRecord CreateTradeRecord(TransactionId id, ClientName clientName, 
                 ItemName itemName, ItemQuantity qty, Money unitPrice, Money totalPrice)
-        {
-            if(totalPrice == unitPrice * qty)
-                return new TradeRecord(id, clientName, itemName, qty, unitPrice, totalPrice);
-            else
-                throw new Exception("Invalid TradeRecord");
-
-        }
+            => totalPrice == unitPrice * qty ? new TradeRecord(id, clientName, itemName, qty, unitPrice, totalPrice)
+                : throw new Exception("Inconsistence Business invariants");
     }
 }

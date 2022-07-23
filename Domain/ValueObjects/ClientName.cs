@@ -7,26 +7,13 @@ namespace ValueObjects
         public readonly string Name;
 
         private ClientName(string name)
-        {
-            this.Name = name;
-        }
+            => this.Name = name;
 
-        public static ClientName CreateName(string name)
-        {
-            if(ValidateId(name))
-                return new ClientName(name);
-            else
-                throw new System.Exception("Invalid name");
-        }
+        public static ClientName FromString(string name)
+            => ValidateClientName(name) ? new ClientName(name) : throw new System.Exception("Invalid name");
 
-        private static bool ValidateId(string name)
-        {
-            Regex regex = new Regex("[A-Za-z]+");
-            if(name.Length <= 20)
-                return regex.IsMatch(name);
-            else
-                return false;
-        }
+        private static bool ValidateClientName(string name)
+            => new Regex("[A-Za-z]+").IsMatch(name);
 
         public override string ToString()
             => $"{Name}";

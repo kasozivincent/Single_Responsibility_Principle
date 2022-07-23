@@ -7,26 +7,13 @@ namespace ValueObjects
         private string Id;
 
         private TransactionId(string Id)
-        {
-            this.Id = Id;
-        }
+            => this.Id = Id;
 
-        public static TransactionId CreateId(string Id)
-        {
-            if(ValidateId(Id))
-                return new TransactionId(Id);
-            else
-                throw new System.Exception("Invalid Id");
-        }
+        public static TransactionId FromString(string Id)
+            => ValidateId(Id) ? new TransactionId(Id) : throw new System.Exception("Invalid Id");
 
         private static bool ValidateId(string Id)
-        {
-            Regex regex = new Regex("^[A-Z]{3}/[0-9]{3}$");
-            if(Id.Length == 6)
-                return regex.IsMatch(Id);
-            else
-                return false;
-        }
+            => new Regex("^[A-Z]+[0-9]+$").IsMatch(Id);
 
         public override string ToString()
             => $"{Id}";
