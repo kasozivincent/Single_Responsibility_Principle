@@ -20,60 +20,65 @@ namespace Domain
         private IEnumerable<string> ReadData(string fileName)
             => File.ReadLines(fileName);
 
+        private void Log(string logMessage)
+            => Console.WriteLine(logMessage);
+
+        private TradeRecord DomainMapper(List<string> fields)
+        {
+            var id = TransactionId.FromString(fields[0]);
+                var clientName = ClientName.FromString(fields[1]);
+                var itemName = ItemName.FromString(fields[2]);
+                var quantity = ItemQuantity.FromInt(int.Parse(fields[3]));
+
+                Amount amount;
+                var currency = ParseMoney(fields[4], out amount);
+                var unitPrice = Money.CreateMoney(amount, currency);
+
+                currency = ParseMoney(fields[5], out amount);
+                var totalPrice = Money.CreateMoney(amount, currency);
+                return TradeRecord.CreateTradeRecord(id, clientName, itemName, quantity, unitPrice, totalPrice);
+                
+        }
+
         private IEnumerable<Traderecord> ParseRecordLines(IEnumerable<string> records)
         {
             int lineNumber = 1; 
-            IEnumerable<TradeRecord> validatedTradeRecords = new List<TradeRecord>();
+            ICollection<TradeRecord> validatedTradeRecords = new List<TradeRecord>();
             foreach (string unvalidatedTradeRecord in records)
             {
                 //splitting along the comma (we assume that the fields are separated using commas)
                 var recordFields = unvalidatedTradeRecord.Split(",").ToList();
                 
                 if(recordFields.Count != 6){
-                     Console.WriteLine($"Malformed record line on line number {lineNumber}"); 
+                     Log($"Malformed record line on line number {lineNumber}"); 
                      continue;
                 }
                 if(recordFields[0].Length != 6){
-                    Console.WriteLine($"Malformed Id on line number {lineNumber}");
+                    Log($"Malformed Id on line number {lineNumber}");
                     continue;
                 }
                 if(recordFields[1].Length > 20){
-                    Console.WriteLine($"Malformed ClientName on line number {lineNumber}");
+                    Log($"Malformed ClientName on line number {lineNumber}");
                     continue;
                 }
                 if(recordFields[2].Length > 10){
-                    Console.WriteLine($"Malformed ItemName on line number {lineNumber}");
+                    Log($"Malformed ItemName on line number {lineNumber}");
                     continue;
                 }
                 if(!int.TryParse(recordFields[3], out int _)){
-                    Console.WriteLine($"Malformed Quantity value on line number {lineNumber}");
+                    Log($"Malformed Quantity value on line number {lineNumber}");
                     continue;
                 }
                 if(recordFields[4].Length <= 3){
-                    Console.WriteLine($"Malformed UnitPrice currency on line number {lineNumber}");
+                    Log($"Malformed UnitPrice currency on line number {lineNumber}");
                     continue;
                 }
                 if(recordFields[5].Length <= 3) {
-                    Console.WriteLine($"Malformed Total Price currency on line number {lineNumber}");
+                    Log($"Malformed Total Price currency on line number {lineNumber}");
                     continue;
                 }
 
-                var id = TransactionId.FromString(recordFields[0]);
-                var clientName = ClientName.FromString(recordFields[1]);
-                var itemName = ItemName.FromString(recordFields[2]);
-                var quantity = ItemQuantity.FromInt(int.Parse(recordFields[3]));
-
-                Amount amount;
-                var currency = ParseMoney(recordFields[4], out amount);
-                var unitPrice = Money.CreateMoney(amount, currency);
-
-                currency = ParseMoney(recordFields[5], out amount);
-                var totalPrice = Money.CreateMoney(amount, currency);
-
-
-                var tradeRecord = TradeRecord.CreateTradeRecord(id, clientName, itemName, quantity, unitPrice, totalPrice);
-
-                validatedTradeRecords.Add(tradeRecord);
+                validatedTradeRecords.Add(DomainMapper(recordFields));
                 lineNumber++;
             }
 
@@ -89,16 +94,13 @@ namespace Domain
 
         public void ProcessTrades(string filename)
         {
-           
             var record = ReadData(filename);
             var parsedRecords = ParseRecordLines(record);
             StoreRecords(parsedRecords);
-            
         }
 
         private static Traderecord Transformer(TradeRecord trade)
-        {
-            Traderecord databaseObject = new Traderecord{
+            => new Traderecord{
                 Id = trade.Id.ToString(),
                 ClientName = trade.ClientName.ToString(),
                 ItemName = trade.ItemName.ToString(),
@@ -106,9 +108,6 @@ namespace Domain
                 UnitPrice = trade.UnitPrice.ToString(),
                 TotalPrice = trade.TotalPrice.ToString()
             };
-
-            return databaseObject;
-        }
 
         private static Currency ParseMoney(string curr, out Amount amount){
             string currency = curr.Substring(0,3);
