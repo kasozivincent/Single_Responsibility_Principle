@@ -5,21 +5,26 @@ using System.Linq;
 using ValueObjects;
 using Domain.Models;
 
+/*
+    Problems with this God class.
+    1. Reads the input data
+    2. Parses the data to check if it obeys the rules
+    3. Logging errors
+    4. Mapping input fields to domain objects
+    5. Storing the data to a database
+*/
 namespace Domain
 {
     public class TradeProcessor
     {
+        private IEnumerable<string> ReadData(string fileName)
+            => File.ReadLines(fileName);
+
+        
         public void ProcessTrades(string filename)
         {
-            //create a list to store the text in the file
-            List<string> unvalidatedTradeRecords = new List<string>();
-
-            //read from the file
-            unvalidatedTradeRecords = File.ReadLines(filename).ToList();
-
-            int lineNumber = 1; //used for error handling
+           int lineNumber = 1; //used for error handling
             List<TradeRecord> validatedTradeRecords = new List<TradeRecord>();
-
             foreach (string unvalidatedTradeRecord in unvalidatedTradeRecords)
             {
                 //splitting along the comma (we assume that the fields are separated using commas)
