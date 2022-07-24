@@ -30,7 +30,10 @@ namespace Domain
         }
 
         private void Log(string logMessage)
-            => Console.WriteLine(logMessage);
+        {
+            Console.WriteLine(logMessage);
+        }
+            
 
         private TradeRecord DomainMapper(List<string> fields)
         {
