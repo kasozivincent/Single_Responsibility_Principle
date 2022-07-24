@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ValueObjects;
 using Domain.Models;
+using Domain.Services;
 
 /*
     Problems with this God class.
@@ -15,10 +16,18 @@ using Domain.Models;
 */
 namespace Domain
 {
-    public class TradeProcessor
+    public class TradeProcessor<T>
     {
-        private IEnumerable<string> ReadData(string fileName)
-            => File.ReadLines(fileName);
+        private readonly IDataProvider provider;
+        private readonly IParser<T> parser;
+        private readonly IRepository<T> repository;
+
+        public TradeProcessor(IDataProvider provider, IParser<T> parser, IRepository<T> repository)
+        {
+            this.provider = provider;
+            this.parser = parser;
+            this.repository = repository;
+        }
 
         private void Log(string logMessage)
             => Console.WriteLine(logMessage);
@@ -40,50 +49,6 @@ namespace Domain
                 
         }
 
-        private IEnumerable<Traderecord> ParseRecordLines(IEnumerable<string> records)
-        {
-            int lineNumber = 1; 
-            ICollection<TradeRecord> validatedTradeRecords = new List<TradeRecord>();
-            foreach (string unvalidatedTradeRecord in records)
-            {
-                //splitting along the comma (we assume that the fields are separated using commas)
-                var recordFields = unvalidatedTradeRecord.Split(",").ToList();
-                
-                if(recordFields.Count != 6){
-                     Log($"Malformed record line on line number {lineNumber}"); 
-                     continue;
-                }
-                if(recordFields[0].Length != 6){
-                    Log($"Malformed Id on line number {lineNumber}");
-                    continue;
-                }
-                if(recordFields[1].Length > 20){
-                    Log($"Malformed ClientName on line number {lineNumber}");
-                    continue;
-                }
-                if(recordFields[2].Length > 10){
-                    Log($"Malformed ItemName on line number {lineNumber}");
-                    continue;
-                }
-                if(!int.TryParse(recordFields[3], out int _)){
-                    Log($"Malformed Quantity value on line number {lineNumber}");
-                    continue;
-                }
-                if(recordFields[4].Length <= 3){
-                    Log($"Malformed UnitPrice currency on line number {lineNumber}");
-                    continue;
-                }
-                if(recordFields[5].Length <= 3) {
-                    Log($"Malformed Total Price currency on line number {lineNumber}");
-                    continue;
-                }
-
-                validatedTradeRecords.Add(DomainMapper(recordFields));
-                lineNumber++;
-            }
-
-            return validatedTradeRecords.Select(Transformer);
-        }
 
         private void StoreRecords(IEnumerable<Traderecord> records)
         {
@@ -92,22 +57,10 @@ namespace Domain
             dbcontext.SaveChanges();
         }
 
-        public void ProcessTrades(string filename)
-        {
-            var record = ReadData(filename);
-            var parsedRecords = ParseRecordLines(record);
-            StoreRecords(parsedRecords);
-        }
+        public void ProcessTrades()
+            => repository.Save(parser.Parse(provider.Read()));
 
-        private static Traderecord Transformer(TradeRecord trade)
-            => new Traderecord{
-                Id = trade.Id.ToString(),
-                ClientName = trade.ClientName.ToString(),
-                ItemName = trade.ItemName.ToString(),
-                ItemQuantity = int.Parse(trade.ItemQuantity.ToString()),
-                UnitPrice = trade.UnitPrice.ToString(),
-                TotalPrice = trade.TotalPrice.ToString()
-            };
+       
 
         private static Currency ParseMoney(string curr, out Amount amount){
             string currency = curr.Substring(0,3);
