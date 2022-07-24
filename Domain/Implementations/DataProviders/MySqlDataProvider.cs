@@ -7,7 +7,7 @@ namespace Domain.Implementations.DataProviders
     {
         public IEnumerable<string> Read()
         {
-            return null;
+            return new List<string>();
         }
     }
 }
