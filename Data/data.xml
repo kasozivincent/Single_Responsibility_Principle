@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TradeLines>
+    <TradeLine>
+        <Id>XML153</Id>
+        <ClientName>Kasozi</ClientName>
+        <ItemName>Laptop</ItemName>
+        <Quantity>3</Quantity>
+        <UnitPrice>USD500</UnitPrice>
+        <TotalPrice>USD1500</TotalPrice>
+    </TradeLine>
+
+    <TradeLine>
+        <Id>ART823</Id>
+        <ClientName>Nafti</ClientName>
+        <ItemName>Iphone</ItemName>
+        <Quantity>1</Quantity>
+        <UnitPrice>USD786</UnitPrice>
+        <TotalPrice>USD786</TotalPrice>
+    </TradeLine>
+
+    <TradeLine>
+        <Id>GAA153</Id>
+        <ClientName>Eric</ClientName>
+        <ItemName>Poulet</ItemName>
+        <Quantity>3</Quantity>
+        <UnitPrice>DZD500</UnitPrice>
+        <TotalPrice>DZD1500</TotalPrice>
+    </TradeLine>
+
+</TradeLines>
