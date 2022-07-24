@@ -20,12 +20,11 @@ namespace Domain
         private IEnumerable<string> ReadData(string fileName)
             => File.ReadLines(fileName);
 
-        
-        public void ProcessTrades(string filename)
+        private IEnumerable<Traderecord> ParseRecordLines(IEnumerable<string> records)
         {
-           int lineNumber = 1; //used for error handling
-            List<TradeRecord> validatedTradeRecords = new List<TradeRecord>();
-            foreach (string unvalidatedTradeRecord in unvalidatedTradeRecords)
+            int lineNumber = 1; 
+            IEnumerable<TradeRecord> validatedTradeRecords = new List<TradeRecord>();
+            foreach (string unvalidatedTradeRecord in records)
             {
                 //splitting along the comma (we assume that the fields are separated using commas)
                 var recordFields = unvalidatedTradeRecord.Split(",").ToList();
@@ -78,17 +77,22 @@ namespace Domain
                 lineNumber++;
             }
 
-            List<Traderecord> databaseRecords = new List<Traderecord>();
+            return validatedTradeRecords.Select(Transformer);
+        }
 
-            foreach(TradeRecord trade in validatedTradeRecords)
-            {
-                Traderecord record = Transformer(trade);
-                databaseRecords.Add(record);
-            }
-
+        private void StoreRecords(IEnumerable<Traderecord> records)
+        {
             srpContext dbcontext = new srpContext();
-            dbcontext.Traderecords.AddRange(databaseRecords);
+            dbcontext.Traderecords.AddRange(records);
             dbcontext.SaveChanges();
+        }
+
+        public void ProcessTrades(string filename)
+        {
+           
+            var record = ReadData(filename);
+            var parsedRecords = ParseRecordLines(record);
+            StoreRecords(parsedRecords);
             
         }
 
