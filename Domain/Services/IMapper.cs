@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace Domain.Services
 {
-    public interface IMapper<T>
+    public interface IMapper
     {
-        T Map(IEnumerable<string> fields);
+        TradeRecord Map(IList<string> fields);
     }
 }
