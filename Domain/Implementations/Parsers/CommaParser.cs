@@ -5,18 +5,18 @@ using Domain.Services;
 
 namespace Domain.Implementations.Parsers
 {
-    public class CommaParser<T> : IParser<T>
+    public class CommaParser : IParser
     {
         private readonly ILogger logger;
-        private readonly IMapper<T> mapper;
+        private readonly IMapper mapper;
 
-        public CommaParser(ILogger logger, IMapper<T> mapper)
+        public CommaParser(ILogger logger, IMapper mapper)
         {
             this.logger = logger;
             this.mapper = mapper;
         }
 
-         private static Traderecord Transformer(TradeRecord trade)
+         private  Traderecord Transformer(TradeRecord trade)
             => new Traderecord{
                 Id = trade.Id.ToString(),
                 ClientName = trade.ClientName.ToString(),
@@ -26,13 +26,12 @@ namespace Domain.Implementations.Parsers
                 TotalPrice = trade.TotalPrice.ToString()
             };
 
-        public IEnumerable<T> Parse(IEnumerable<string> records)
+        public IEnumerable<Traderecord> Parse(IEnumerable<string> records)
         {
-             int lineNumber = 1; 
+            int lineNumber = 1; 
             ICollection<TradeRecord> validatedTradeRecords = new List<TradeRecord>();
             foreach (string unvalidatedTradeRecord in records)
             {
-                //splitting along the comma (we assume that the fields are separated using commas)
                 var recordFields = unvalidatedTradeRecord.Split(",").ToList();
                 
                 if(recordFields.Count != 6){
@@ -64,12 +63,11 @@ namespace Domain.Implementations.Parsers
                     continue;
                 }
 
-            //    validatedTradeRecords.Add(mapper.Map(recordFields));
+                validatedTradeRecords.Add(mapper.Map(recordFields));
                 lineNumber++;
             }
 
-         //   return validatedTradeRecords.Select(Transformer);
-         return null;
+            return validatedTradeRecords.Select(Transformer);
         }
     }
 }
