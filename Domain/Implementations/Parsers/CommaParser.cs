@@ -26,7 +26,7 @@ namespace Domain.Implementations.Parsers
                 TotalPrice = trade.TotalPrice.ToString()
             };
 
-        public IEnumerable<Traderecord> Parse(IEnumerable<string> records)
+        public IList<Traderecord> Parse(IEnumerable<string> records)
         {
             int lineNumber = 1; 
             ICollection<TradeRecord> validatedTradeRecords = new List<TradeRecord>();
@@ -65,9 +65,10 @@ namespace Domain.Implementations.Parsers
 
                 validatedTradeRecords.Add(mapper.Map(recordFields));
                 lineNumber++;
+
             }
 
-            return validatedTradeRecords.Select(Transformer);
+            return validatedTradeRecords.Select(Transformer).ToList();
         }
     }
 }
