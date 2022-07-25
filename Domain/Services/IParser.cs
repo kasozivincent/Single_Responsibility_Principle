@@ -5,6 +5,6 @@ namespace Domain.Services
 {
     public interface IParser
     {
-        IEnumerable<Traderecord> Parse(IEnumerable<string> records);
+        IList<Traderecord> Parse(IEnumerable<string> records);
     }
 }
