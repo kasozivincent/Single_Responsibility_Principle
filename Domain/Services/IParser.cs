@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using Domain.Models;
 
 namespace Domain.Services
 {
-    public interface IParser<T>
+    public interface IParser
     {
-        IEnumerable<T> Parse(IEnumerable<string> records);
+        IEnumerable<Traderecord> Parse(IEnumerable<string> records);
     }
 }
