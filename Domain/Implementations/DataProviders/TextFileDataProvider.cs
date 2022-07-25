@@ -3,7 +3,7 @@ using System.IO;
 using Domain.Services;
 using System;
 
-namespace Domain.Implementations
+namespace Domain.Implementations.DataProviders
 {
     public class TextFileDataProvider : IDataProvider
     {

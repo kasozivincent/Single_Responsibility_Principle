@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TradeLines>
     <TradeLine>
-        <Id>XML153</Id>
+        <Id>XNN153</Id>
         <ClientName>Kasozi</ClientName>
         <ItemName>Laptop</ItemName>
         <Quantity>3</Quantity>
@@ -10,7 +10,7 @@
     </TradeLine>
 
     <TradeLine>
-        <Id>ART823</Id>
+        <Id>ART498</Id>
         <ClientName>Nafti</ClientName>
         <ItemName>Iphone</ItemName>
         <Quantity>1</Quantity>
@@ -19,7 +19,7 @@
     </TradeLine>
 
     <TradeLine>
-        <Id>GAA153</Id>
+        <Id>GAT153</Id>
         <ClientName>Eric</ClientName>
         <ItemName>Poulet</ItemName>
         <Quantity>3</Quantity>

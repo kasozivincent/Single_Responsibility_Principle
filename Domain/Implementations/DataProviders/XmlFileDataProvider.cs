@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.IO;
 using Domain.Services;
-using System;
 using System.Xml;
 using System.Text;
 
-namespace Domain.Implementations
+namespace Domain.Implementations.DataProviders
 {
     public class XmlFileDataProvider : IDataProvider
     {
