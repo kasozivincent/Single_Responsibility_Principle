@@ -3,8 +3,8 @@ using Domain.Models;
 
 namespace Domain.Services
 {
-    public interface IRepository<T>
+    public interface IRepository
     {
-        void Save(IEnumerable<T> record);
+        void Save(IList<Traderecord> record);
     }
 }
